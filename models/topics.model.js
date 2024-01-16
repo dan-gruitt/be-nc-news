@@ -30,3 +30,13 @@ exports.fetchArticleById = (articleId) => {
       }
     });
 };
+
+exports.fetchAllArticles = () => {
+  return db
+    .query(
+      `SELECT author, title, article_id, topic, created_at, votes, article_img_url, CAST ((SELECT COUNT(*) FROM comments WHERE articles.article_id=comments.article_id) AS INTEGER) AS comment_count FROM articles ORDER BY created_at`
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};

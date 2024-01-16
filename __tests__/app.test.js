@@ -94,9 +94,8 @@ describe('/api/articles', () => {
 describe('GET', () => {
   test('Status code 200 - returns article object with correct properties ', () => {
     return request(app).get('/api/articles').expect(200).then(({body})=> {
-      console.log(body, "<---- just checking body is coming through");
       expect(Array.isArray(body)).toBe(true)
-      expect(body).toBeSortedBy(created_at)
+      expect(body).toBeSortedBy("created_at")
       body.forEach((article)=> {
         expect(typeof article.author).toBe('string')
         expect(typeof article.title).toBe('string')
@@ -106,7 +105,7 @@ describe('GET', () => {
         expect(typeof article.votes).toBe('number')
         expect(typeof article.article_img_url).toBe('string')
         expect(typeof article.comment_count).toBe('number')
-        
+        expect(article).not.toHaveProperty('body')
       })
 
     })
