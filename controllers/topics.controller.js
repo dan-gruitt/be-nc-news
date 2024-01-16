@@ -18,10 +18,12 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getArticleById = (req, res, next) => {
-  const articleId = req.params.article_id
-  fetchArticleById(articleId).then((article)=> {
-    return res.status(200).send({article})
-  }).catch((err)=> {
-    next(err)
-  })
+  const articleId = req.params.article_id;
+  fetchArticleById(articleId)
+    .then((article) => {
+      return res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
