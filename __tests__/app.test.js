@@ -9,7 +9,7 @@ afterAll(() => db.end());
 beforeEach(() => seed(data));
 
 describe("healthCheck", () => {
-  test("should receive status code of 200", () => {
+  test("Status code 200 - Health check on api", () => {
     return request(app).get("/api/healthCheck").expect(200);
   });
 });
@@ -31,7 +31,7 @@ describe("/api/topics", () => {
         });
     });
 
-    test("should respond with 404 error when endpoint not found", () => {
+    test("Status code 404 - invalid endpoint", () => {
       return request(app).get("/api/toopiics").expect(404);
     });
   });
@@ -39,7 +39,7 @@ describe("/api/topics", () => {
 
 describe("/api", () => {
   describe("endpoints", () => {
-    test("should return 200 status + object with all endpoints available ", () => {
+    test("Status Code 200 - should return object with all endpoints available ", () => {
       return request(app)
         .get("/api")
         .expect(200)
@@ -51,3 +51,41 @@ describe("/api", () => {
   });
 });
 
+describe("api/articles/:article_id", () => {
+  describe("GET", () => {
+    test("Status code 200 - returns article object with correct properties", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          const article = body.article;
+          expect(article).toBeObject();
+          expect(typeof article.author).toBe("string");
+          expect(typeof article.title).toBe("string");
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.body).toBe("string");
+          expect(typeof article.created_at).toBe("string");
+          expect(typeof article.votes).toBe("number");
+          expect(typeof article.article_img_url).toBe("string");
+        });
+    });
+
+    test("Status code 404 - sends an appropriate status and error message when given a valid but non-existent id", () => {
+      return request(app)
+        .get("/api/articles/99999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
+        });
+    });
+
+    test("Status code 400 - sends an appropriate status code and error message when given invalid id", () => {
+      return request(app)
+        .get("/api/articles/invalidId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
+});
