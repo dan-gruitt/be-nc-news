@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const endPoints = require("../endpoints.json");
 
 afterAll(() => db.end());
 beforeEach(() => seed(data));
@@ -29,11 +30,23 @@ describe("/api/topics", () => {
           });
         });
     });
-    
-    test('should respond with 404 error when endpoint not found', () => {
-        return request(app).get("/api/toopiics").expect(404)
+
+    test("should respond with 404 error when endpoint not found", () => {
+      return request(app).get("/api/toopiics").expect(404);
     });
   });
 });
 
-
+describe("/api", () => {
+  describe("endpoints", () => {
+    test("should return 200 status + object with all endpoints available ", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+          expect(Object.keys(body).length).toBeGreaterThan(0);
+          expect(body).toEqual(endPoints);
+        });
+    });
+  });
+});
