@@ -16,7 +16,7 @@ describe("healthCheck", () => {
 
 describe("/api/topics", () => {
   describe("GET", () => {
-    test("an array of topic objects, each of which should have the following properties: slug, description", () => {
+    test("Status code 200 - returns an array of topic objects, each of which should have the following properties: slug, description", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
@@ -50,3 +50,4 @@ describe("/api", () => {
     });
   });
 });
+
