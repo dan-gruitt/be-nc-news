@@ -2,11 +2,10 @@ const express = require("express");
 const {
   getHealthCheck,
   getAllTopics,
-  getArticleById,
-  getAllArticles,
 } = require("./controllers/topics.controller");
 
 const { getEndpoints } = require("./controllers/endpoint.controller.js");
+const { getArticleById, getAllArticles, getAllCommentsByArticleId } = require("./controllers/articles.controller.js");
 
 const app = express();
 
@@ -16,9 +15,11 @@ app.get("/api/topics", getAllTopics);
 
 app.get("/api", getEndpoints);
 
-app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/articles/:article_id",getArticleById);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
 // PSQL error codes
 app.use((err, req, res, next) => {
@@ -31,12 +32,14 @@ app.use((err, req, res, next) => {
 
 // Promise.reject errors from models
 app.use((err, req, res, next) => {
-  if (err.msg === "Article not found") {
+  if (
+    err.msg === "Article not found" ||
+    err.msg === "Comments not found" ||
+    err.msg === "Invalid query"
+  ) {
     res.status(404).send({ msg: err.msg });
-  }
-
-  if (err.msg === "Invalid query") {
-    res.status(404).send({ msg: err.msg });
+  } else {
+    next(err);
   }
 });
 
