@@ -44,8 +44,9 @@ describe("/api", () => {
         .get("/api")
         .expect(200)
         .then(({ body }) => {
-          expect(Object.keys(body).length).toBeGreaterThan(0);
-          expect(body).toEqual(endPoints);
+          const mainBody = body.endpoints
+          expect(Object.keys(mainBody).length).toBeGreaterThan(0);
+          expect(mainBody).toEqual(endPoints);
         });
     });
   });
@@ -97,10 +98,11 @@ describe("/api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          expect(Array.isArray(body)).toBe(true);
-          expect(body.length).toBeGreaterThan(0);
-          expect(body).toBeSortedBy("created_at");
-          body.forEach((article) => {
+          const allArticles = body.articles
+          expect(Array.isArray(allArticles)).toBe(true);
+          expect(allArticles.length).toBeGreaterThan(0);
+          expect(allArticles).toBeSortedBy("created_at");
+          allArticles.forEach((article) => {
             expect(typeof article.author).toBe("string");
             expect(typeof article.title).toBe("string");
             expect(typeof article.article_id).toBe("number");
@@ -123,10 +125,11 @@ describe("/api/articles/:article_id/comments", () => {
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body }) => {
-          expect(Array.isArray(body)).toBe(true);
-          expect(body.length).toBeGreaterThan(0);
-          expect(body).toBeSortedBy("created_at");
-          body.forEach((comment) => {
+          const allComments = body.comments
+          expect(Array.isArray(allComments)).toBe(true);
+          expect(allComments.length).toBeGreaterThan(0);
+          expect(allComments).toBeSortedBy("created_at");
+          allComments.forEach((comment) => {
             expect(comment).toEqual(
               expect.objectContaining({
                 comment_id: expect.any(Number),
