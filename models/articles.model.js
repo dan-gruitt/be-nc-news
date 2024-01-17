@@ -1,27 +1,28 @@
 const db = require("../db/connection");
+const format = require("pg-format");
 
 exports.fetchArticleById = (article_id) => {
-    return db
-      .query(
-        `
+  return db
+    .query(
+      `
     SELECT * FROM articles
     WHERE article_id = $1
     `,
-        [article_id]
-      )
-      .then(({ rows }) => {
-        if (rows.length === 0) {
-          return Promise.reject({ msg: "Article not found" });
-        } else {
-          return rows[0];
-        }
-      });
-  };
+      [article_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ msg: "Article not found" });
+      } else {
+        return rows[0];
+      }
+    });
+};
 
-  exports.fetchAllArticles = () => {
-    return db
-      .query(
-        `
+exports.fetchAllArticles = () => {
+  return db
+    .query(
+      `
       SELECT 
       author, 
       title, 
@@ -38,27 +39,47 @@ exports.fetchArticleById = (article_id) => {
       FROM articles 
       ORDER BY created_at
       `
-      )
-      .then(({ rows }) => {
-        return rows;
-      });
-  };
-  
-  exports.fetchAllCommentsByArticleId = (article_id) => {
-    return db
-      .query(
-        `
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+exports.fetchAllCommentsByArticleId = (article_id) => {
+  return db
+    .query(
+      `
       SELECT * FROM comments
       WHERE article_id = $1
        ORDER BY created_at
       `,
-        [article_id]
-      )
-      .then(({ rows }) => {
-        if (rows.length === 0) {
-          return Promise.reject({ msg: "Comments not found" });
-        } else {
-          return rows;
-        }
-      });
-  };
+      [article_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ msg: "Comments not found" });
+      } else {
+        return rows;
+      }
+    });
+};
+
+exports.insertCommentByArticleId = (article_id, newComment) => {
+  const date = Date.now();
+  const cleanDate = new Date(date);
+  const sqlQuery = format(
+    `
+  INSERT INTO comments
+  (body, votes, author, article_id, created_at)
+  VALUES
+  %L
+  RETURNING *;
+  `,
+    [[newComment.body, 0, newComment.username, article_id, cleanDate]]
+  );
+  return db
+    .query(sqlQuery)
+    .then(({ rows }) => {
+      return rows[0];
+    })
+};
