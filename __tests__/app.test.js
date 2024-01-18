@@ -223,3 +223,74 @@ describe("POST", () => {
   });
 });
 
+describe("PATCH", () => {
+  describe("/api/articles/:article_id", () => {
+    test("Status code 200 - Should update comment votes and return the updated article", () => {
+      const requestObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(requestObj)
+        .expect(200)
+        .then(({ body }) => {
+          expect(Object.keys(body).length).toBeGreaterThan(0);
+          expect(body.newArticle).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: expect.any(String),
+              votes: 105,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+          );
+        });
+    });
+
+    test("Status code 404 - sends an appropriate status and error message when given a valid but non-existent id", () => {
+      const requestObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/articles/9999")
+        .send(requestObj)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
+        });
+    });
+
+    test("Status code 400 - sends an appropriate status code and error message when given invalid id", () => {
+      const requestObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/articles/invalidId")
+        .send(requestObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+
+    test("Status code 404 - Should return error if request does not contain valid key", () => {
+      const requestObj = { invalid_key: 5 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(requestObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+
+    test("Status code 404 - Should return error if request does not contain valid value data type", () => {
+      const requestObj = { inc_votes: "invalid_data" };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(requestObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
+});

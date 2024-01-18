@@ -11,6 +11,7 @@ const {
   getAllArticles,
   getAllCommentsByArticleId,
   postCommentByArticleId,
+  patchArticleByArticleId,
 } = require("./controllers/articles.controller.js");
 
 app.use(express.json());
@@ -28,6 +29,9 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.patch('/api/articles/:article_id', patchArticleByArticleId)
+
 
 // Promise.reject errors from models
 
