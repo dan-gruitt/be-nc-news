@@ -77,9 +77,27 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
   `,
     [[newComment.body, 0, newComment.username, article_id, cleanDate]]
   );
+  return db.query(sqlQuery).then(({ rows }) => {
+    return rows[0];
+  });
+};
+
+exports.updateArticleByArticleId = (article_id, inc_votes) => {
   return db
-    .query(sqlQuery)
+    .query(
+      `
+    UPDATE articles
+    SET votes = votes + $2
+    WHERE article_id = $1
+    RETURNING *;
+  `,
+      [article_id, inc_votes]
+    )
     .then(({ rows }) => {
-      return rows[0];
-    })
+      if (rows.length === 0) {
+        return Promise.reject({ msg: "Article not found" });
+      } else {
+        return rows[0];
+      }
+    });
 };
