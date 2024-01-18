@@ -58,7 +58,7 @@ exports.patchArticleByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { inc_votes } = req.body;
   updateArticleByArticleId(article_id, inc_votes).then((article) => {
-    res.status(200).send({ newArticle: article });
+    return res.status(200).send({ newArticle: article });
   }).catch((err)=> {
     next(err)
   })
