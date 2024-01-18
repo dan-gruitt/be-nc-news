@@ -195,7 +195,7 @@ describe("POST", () => {
         .send(newComment)
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Article not found test");
+          expect(body.msg).toBe("Article not found");
         });
     });
 
@@ -287,6 +287,32 @@ describe("PATCH", () => {
       return request(app)
         .patch("/api/articles/1")
         .send(requestObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
+});
+
+describe("DELETE", () => {
+  describe("/api/comments/:comment_id", () => {
+    test("Status code 204 - Should delete comment with provided id and not return anything", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+
+    test("Status code 404 - sends an appropriate status and error message when given a valid but non-existent id", () => {
+      return request(app)
+        .delete("/api/comments/99999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Comment not found");
+        });
+    });
+
+    test("Status code 400 - sends an appropriate status and error message when given an invalid id", () => {
+      return request(app)
+        .delete("/api/comments/invalidId")
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");

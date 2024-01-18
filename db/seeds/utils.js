@@ -33,7 +33,18 @@ WHERE article_id = $1
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Article not found test" });
+        return Promise.reject({ status: 404, msg: "Article not found" });
       }
     });
 };
+
+exports.checkCommentExists = (comment_id) => {
+  return db.query(`
+  SELECT * FROM comments
+  WHERE comment_id = $1
+  `,[comment_id]).then(({rows})=>{
+    if(rows.length === 0) {
+      return Promise.reject(({status: 404, msg: "Comment not found"}))
+    }
+  })
+}
