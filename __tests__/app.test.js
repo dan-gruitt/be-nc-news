@@ -176,6 +176,46 @@ describe("GET", () => {
         });
     });
   });
+
+  describe("/api/articles (topic query)", () => {
+    test("Status 200 - Should respond with all articles filtered by topic query", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          const filteredArticles = body.articles;
+          expect(Array.isArray(filteredArticles)).toBe(true);
+          expect(filteredArticles.length).toBeGreaterThan(0);
+          filteredArticles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                topic: "mitch",
+              })
+            );
+          });
+        });
+    });
+
+    test("Status 200 - Should respond with an empty array when when given a valid topic with no articles associated with it", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then(({ body }) => {
+          const filteredArticles = body.articles;
+          expect(Array.isArray(filteredArticles)).toBe(true);
+          expect(filteredArticles.length).toBe(0);
+        });
+    });
+
+    test("Status 400 - Should respond with correct error code when given an invalid query", () => {
+      return request(app)
+        .get("/api/articles?topic=invalid")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid query");
+        });
+    });
+  });
 });
 
 describe("POST", () => {

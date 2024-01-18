@@ -19,11 +19,13 @@ exports.fetchArticleById = (article_id) => {
     });
 };
 
-exports.fetchAllArticles = () => {
-  return db
-    .query(
-      `
-      SELECT 
+exports.fetchAllArticles = (topic) => {
+  const validTopics = ["mitch", "cats", "paper", undefined];
+  if (!validTopics.includes(topic)) {
+    return Promise.reject({ msg: "Invalid query" });
+  }
+  let queryMain = `
+  SELECT 
       author, 
       title, 
       article_id, 
@@ -36,13 +38,16 @@ exports.fetchAllArticles = () => {
       FROM comments 
       WHERE articles.article_id=comments.article_id) AS INTEGER) 
       AS comment_count 
-      FROM articles 
-      ORDER BY created_at
-      `
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+      FROM articles `;
+
+  if (!topic) {
+    queryMain += `ORDER BY created_at`;
+  } else {
+    queryMain += format(`WHERE topic = %L ORDER BY created_at`, [[topic]]);
+  }
+  return db.query(queryMain).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.fetchAllCommentsByArticleId = (article_id) => {
