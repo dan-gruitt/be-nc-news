@@ -19,10 +19,19 @@ exports.fetchArticleById = (article_id) => {
     });
 };
 
-exports.fetchAllArticles = (topic) => {
+exports.fetchAllArticles = (query) => {
+  const topic = query.topic;
   const validTopics = ["mitch", "cats", "paper", undefined];
+
+ 
+  if (Object.keys(query).length !== 0) {
+    if (!Object.keys(query).includes("topic")) {
+      return Promise.reject({ msg: "Invalid query" });
+    }
+  }
+
   if (!validTopics.includes(topic)) {
-    return Promise.reject({ msg: "Invalid query" });
+    return Promise.reject({ msg: "Invalid topic" });
   }
   let queryMain = `
   SELECT 
@@ -43,7 +52,7 @@ exports.fetchAllArticles = (topic) => {
   if (!topic) {
     queryMain += `ORDER BY created_at`;
   } else {
-    queryMain += format(`WHERE topic = %L ORDER BY created_at`, [[topic]]);
+    queryMain += format(`WHERE topic = %L ORDER BY created_at`, topic);
   }
   return db.query(queryMain).then(({ rows }) => {
     return rows;

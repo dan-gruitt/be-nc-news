@@ -19,14 +19,13 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const {topic} = req.query
-  fetchAllArticles(topic)
+  const query = req.query
+  fetchAllArticles(query)
   
     .then((articles) => {
       return res.status(200).send({ articles });
     })
     .catch((err) => {
-      console.log(err, "<------error");
       next(err);
     });
 };

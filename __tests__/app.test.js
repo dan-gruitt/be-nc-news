@@ -207,9 +207,18 @@ describe("GET", () => {
         });
     });
 
-    test("Status 400 - Should respond with correct error code when given an invalid query", () => {
+    test("Status 404 - Should respond with correct error code when given an invalid query", () => {
       return request(app)
         .get("/api/articles?topic=invalid")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid topic");
+        });
+    });
+
+    test("Status 404 - Should respond with correct error when passed invalid query", () => {
+      return request(app)
+        .get("/api/articles?invalidQuery=mitch")
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Invalid query");
@@ -217,6 +226,7 @@ describe("GET", () => {
     });
   });
 });
+
 
 describe("POST", () => {
   describe("/api/articles/:article_id/comments", () => {
