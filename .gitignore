@@ -1,3 +1,5 @@
 node_modules
 .env.*
 visual_out-test.txt
+visual-output.sql
+visual-output-test.sql
