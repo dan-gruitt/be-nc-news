@@ -21,9 +21,6 @@ Provides an array of articles
 ### 🧑‍🤝‍🧑  /api/users
 Provides an array of all users
 
-### 🗯  /api/comments/:comment_id
-Provides a comment when given a valid comment_id
-
 ### 📕  /api/articles/:article_id
 Provides a single article when provided a valid comment_id
 
@@ -33,7 +30,7 @@ Provides all comments associated with the provided article_id
 ## POST
 
 ### 💌  /api/articles/:article_id/comments
-Allows the user to post new comment. 
+Allows the user to post new comment. <br>
 Post object format:
 
 ```
@@ -46,7 +43,7 @@ body: "Sample body
 ## PATCH
 
 ### 💌  /api/articles/:article_id
-Allows the user to increment comment votes to the inputted article_id
+Allows the user to increment comment votes to the inputted article_id<br>
 Patch object format:
 
 ```
@@ -58,7 +55,7 @@ inc_votes : 1
 ## DELETE
 
 ### 💌  /api/articles/:article_id
-Allows the user to delete the article at inputted article_id
+Allows the user to delete the article at inputted article_id<br>
 Please note, no response will be given except the appropriate status code.
 
 
