@@ -5,8 +5,13 @@ exports.fetchArticleById = (article_id) => {
   return db
     .query(
       `
-    SELECT * FROM articles
-    WHERE article_id = $1
+       SELECT *, 
+       (SELECT COUNT(*) 
+       FROM comments 
+       WHERE articles.article_id = comments.article_id) 
+       AS comment_count 
+       FROM articles 
+       WHERE article_id = $1;
     `,
       [article_id]
     )
@@ -19,11 +24,11 @@ exports.fetchArticleById = (article_id) => {
     });
 };
 
+
 exports.fetchAllArticles = (query) => {
   const topic = query.topic;
   const validTopics = ["mitch", "cats", "paper", undefined];
 
- 
   if (Object.keys(query).length !== 0) {
     if (!Object.keys(query).includes("topic")) {
       return Promise.reject({ msg: "Invalid query" });
@@ -115,3 +120,4 @@ exports.updateArticleByArticleId = (article_id, inc_votes) => {
       }
     });
 };
+

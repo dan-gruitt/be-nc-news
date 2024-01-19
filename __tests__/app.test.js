@@ -57,13 +57,20 @@ describe("GET", () => {
         .then(({ body }) => {
           const article = body.article;
           expect(article).toBeObject();
-          expect(typeof article.author).toBe("string");
-          expect(typeof article.title).toBe("string");
-          expect(typeof article.article_id).toBe("number");
-          expect(typeof article.body).toBe("string");
-          expect(typeof article.created_at).toBe("string");
-          expect(typeof article.votes).toBe("number");
-          expect(typeof article.article_img_url).toBe("string");
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+              comment_count: "11",
+            })
+          );
         });
     });
 
@@ -226,7 +233,6 @@ describe("GET", () => {
     });
   });
 });
-
 
 describe("POST", () => {
   describe("/api/articles/:article_id/comments", () => {
