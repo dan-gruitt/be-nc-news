@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require("express");
 const {
   getHealthCheck,
@@ -15,6 +16,8 @@ const {
 } = require("./controllers/articles.controller.js");
 const { deleteCommentByCommentId } = require("./controllers/comments.controllers.js");
 const { getAllUsers } = require("./controllers/users.controller.js");
+
+app.use(cors());
 
 app.use(express.json());
 
