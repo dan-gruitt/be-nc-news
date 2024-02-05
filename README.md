@@ -35,8 +35,8 @@ Post object format:
 
 ```
 {
-username: "inputtedUserName"
-body: "Sample body
+    username: "inputtedUserName"
+    body: "Sample body
 }
 ```
 
@@ -48,7 +48,7 @@ Patch object format:
 
 ```
 {
-inc_votes : 1
+    inc_votes : 1
 }
 ```
 
