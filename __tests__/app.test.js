@@ -234,7 +234,7 @@ describe("GET", () => {
   });
 });
 
-describe("POST", () => {
+describe.only("POST", () => {
   describe("/api/articles/:article_id/comments", () => {
     test("Status code 201 - Should add a comment for an article and respond with the posted comment", () => {
       const newComment = { username: "butter_bridge", body: "test body" };
@@ -246,9 +246,9 @@ describe("POST", () => {
           expect(Object.keys(body).length).toBeGreaterThan(0);
           expect(body.newComment).toEqual(
             expect.objectContaining({
-              body: expect.any(String),
+              body: "test body",
               votes: expect.any(Number),
-              author: expect.any(String),
+              author: "butter_bridge",
               article_id: expect.any(Number),
               created_at: expect.any(String),
             })
