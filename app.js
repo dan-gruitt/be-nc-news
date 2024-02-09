@@ -64,6 +64,7 @@ app.use((err, req, res, next) => {
 
 // Server errors
 app.use((err, req, res, next) => {
+  console.log(err, "<<< error from app.js");
   res.status(500).send({ message: "Server Error, please try again" });
 });
 
