@@ -236,7 +236,7 @@ describe("GET", () => {
 
 describe("POST", () => {
   describe("/api/articles/:article_id/comments", () => {
-    test.only("Status code 201 - Should add a comment for an article and respond with the posted comment", () => {
+    test("Status code 201 - Should add a comment for an article and respond with the posted comment", () => {
       const newComment = { username: "butter_bridge", body: "test body" };
       return request(app)
         .post("/api/articles/1/comments")
