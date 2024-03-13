@@ -84,8 +84,6 @@ exports.fetchAllCommentsByArticleId = (article_id) => {
 };
 
 exports.insertCommentByArticleId = (article_id, newComment) => {
-  console.log(article_id, "<<<<< articleId model");
-  console.log(newComment , "<<<<< new comment model");
   const date = Date.now();
   const cleanDate = new Date(date);
   const sqlQuery = format(
@@ -99,7 +97,6 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
     [[newComment.body, 0, newComment.username, article_id, cleanDate]]
   );
   return db.query(sqlQuery).then(({ rows }) => {
-    console.log(rows[0], "<<<<< rows[0] model");
     return rows[0];
   });
 };

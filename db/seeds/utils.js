@@ -24,7 +24,6 @@ exports.formatComments = (comments, idLookup) => {
 };
 
 exports.checkArticleIdExists = (article_id) => {
-  console.log(article_id, "<<<< article id checkArticleIdExists");
   return db
     .query(
       `
@@ -34,10 +33,8 @@ WHERE article_id = $1
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        console.log(article_id, "<<<< cannot find article");
         return Promise.reject({ status: 404, msg: "Article not found" });
       }
-      console.log("Can find article");
       return true;
     });
 };

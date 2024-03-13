@@ -43,18 +43,13 @@ exports.getAllCommentsByArticleId = (req, res, next) => {
 
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
-  console.log(article_id, "<<< article id controller");
   const { body } = req;
-  console.log(body, "<<< body controller");
   Promise.all([checkArticleIdExists(article_id), insertCommentByArticleId(article_id, body)])
     .then((data) => {
-      console.log(data, "<<<< response data controller");
       const finalComment = data[1];
-      console.log(finalComment, "<<<< final comment controller");
       return res.status(201).send({ newComment: finalComment });
     })
     .catch((err) => {
-      console.log(err, "<<< error controller");
       next(err);
     });
 };
